@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. Klean - Stay Fresh Stay Mr. Klean</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for State Management -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            teal: '#008080',
+                            tealDark: '#006666',
+                            tealLight: '#E6F2F2',
+                            gold: '#D4AF37',
+                            goldDark: '#AA8C2C',
+                            lightGrey: '#F5F5F7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .product-selected {
+            border: 3px solid #D4AF37 !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 128, 128, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased" x-data="kleanApp()">
+
+    <!-- STICKY HEADER -->
+    <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo and Brand Name -->
+                <div class="flex items-center space-x-3 cursor-pointer" @click="currentTab = 'home'">
+                    <div class="w-10 h-10 bg-brand-teal rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md border-2 border-brand-gold">
+                        K
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold text-brand-teal tracking-wide">Mr. Klean</span>
+                        <p class="text-[9px] text-slate-500 tracking-widest uppercase font-bold">Ashvath Enterprises</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Links (Desktop) -->
+                <nav class="hidden md:flex space-x-8 text-sm font-semibold text-slate-600">
+                    <button @click="currentTab = 'home'" :class="currentTab === 'home' ? 'text-brand-teal border-b-2 border-brand-teal py-5' : 'hover:text-brand-teal py-5'">Home</button>
+                    <button @click="currentTab = 'shop'" :class="currentTab === 'shop' ? 'text-brand-teal border-b-2 border-brand-teal py-5' : 'hover:text-brand-teal py-5'">Shop</button>
+                    <button @click="currentTab = 'profile'" :class="currentTab === 'profile' ? 'text-brand-teal border-b-2 border-brand-teal py-5' : 'hover:text-brand-teal py-5'">My Account</button>
+                    <button @click="currentTab = 'admin'" :class="currentTab === 'admin' ? 'text-brand-teal border-b-2 border-brand-teal py-5' : 'hover:text-brand-teal py-5'">Admin Panel</button>
+                </nav>
+
+                <!-- Action Icons -->
+                <div class="flex items-center space-x-4">
+                    <!-- Search Indicator/Button -->
+                    <button @click="currentTab = 'shop'; focusSearch()" class="text-slate-500 hover:text-brand-teal transition">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </button>
+
+                    <!-- Cart Toggle -->
+                    <button @click="isCartOpen = !isCartOpen" class="relative p-2 text-slate-500 hover:text-brand-teal transition">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span x-show="cartCount() > 0" x-text="cartCount()" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/3 -translate-y-1/3 bg-brand-gold rounded-full"></span>
+                    </button>
+
+                    <!-- Quick Admin Login/Switch -->
+                    <button @click="currentTab = currentTab === 'admin' ? 'home' : 'admin'" class="p-2 text-slate-500 hover:text-brand-teal transition hidden sm:inline-block" title="Admin Panel">
+                        <i class="fa-solid fa-user-gear text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- FLOATING WHATSAPP BUTTON -->
+    <a href="https://wa.me/9042701203?text=Hello%20Mr.%20Klean,%20I%20would%20like%20to%20place%20an%20order." 
+       target="_blank" 
+       class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#20ba5a] transition duration-300 flex items-center justify-center group">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+        <span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-out whitespace-nowrap ml-2 text-sm font-semibold">Chat with Us</span>
+    </a>
+
+    <!-- MAIN WRAPPER -->
+    <main class="min-h-screen">
+        
+        <!-- ================= HOME PAGE ================= -->
+        <div x-show="currentTab === 'home'" x-cloak class="space-y-12 pb-16">
+            <!-- Hero Banner -->
+            <section class="relative bg-gradient-to-r from-brand-teal to-brand-tealDark text-white py-16 sm:py-24 overflow-hidden">
+                <div class="absolute inset-0 opacity-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=2070&auto=format&fit=crop');"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div class="space-y-6">
+                            <span class="inline-block bg-brand-gold text-slate-900 text-xs uppercase tracking-widest font-extrabold px-3 py-1 rounded-full">
+                                Premium Cleaning Solutions
+                            </span>
+                            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-none">
+                                STAY FRESH<br><span class="text-brand-gold">STAY MR. KLEAN</span>
+                            </h1>
+                            <p class="text-lg text-slate-100 max-w-md">
+                                Eco-friendly, powerful formulas designed by Ashvath Enterprises to bring pristine freshness to your home, office, and vehicles.
+                            </p>
+                            <div class="flex flex-wrap gap-4 pt-2">
+                                <button @click="currentTab = 'shop'" class="bg-brand-gold hover:bg-brand-goldDark text-slate-950 font-bold px-8 py-3 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                                    Explore Catalogue
+                                </button>
+                                <a href="https://wa.me/9042701203?text=Hello%20Mr.%20Klean,%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="bg-transparent border-2 border-white hover:bg-white hover:text-brand-teal font-semibold px-6 py-3 rounded-xl transition">
+                                    <i class="fa-brands fa-whatsapp mr-2"></i>Order via WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex justify-center relative">
+                            <!-- SVG Placeholder simulating high-end product grouping -->
+                            <div class="relative w-80 h-80 bg-white/10 rounded-full border border-white/20 flex items-center justify-center p-8 backdrop-blur-sm">
+                                <div class="absolute -top-4 -left-4 w-24 h-24 bg-brand-gold/25 rounded-full filter blur-xl"></div>
+                                <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-brand-tealLight/20 rounded-full filter blur-xl"></div>
+                                <div class="text-center space-y-4">
+                                    <div class="text-6xl text-brand-gold animate-bounce"><i class="fa-solid fa-sparkles"></i></div>
+                                    <h3 class="font-bold text-2xl tracking-wider text-white">MR. KLEAN</h3>
+                                    <p class="text-xs uppercase tracking-widest text-brand-gold font-semibold">100% Quality Guaranteed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Category/Highlight Stats -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm text-center border border-slate-100">
+                        <div class="text-brand-teal text-3xl mb-2"><i class="fa-solid fa-hand-holding-droplet"></i></div>
+                        <div class="font-bold text-slate-900">Gentle Care</div>
+                        <div class="text-xs text-slate-500">Skin Safe & Non-toxic</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm text-center border border-slate-100">
+                        <div class="text-brand-teal text-3xl mb-2"><i class="fa-solid fa-bolt"></i></div>
+                        <div class="font-bold text-slate-900">Powerful Action</div>
+                        <div class="text-xs text-slate-500">Removes stubborn grease</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm text-center border border-slate-100">
+                        <div class="text-brand-teal text-3xl mb-2"><i class="fa-solid fa-bottle-water"></i></div>
+                        <div class="font-bold text-slate-900">1 Litre Value Packs</div>
+                        <div class="text-xs text-slate-500">Eco-conscious sizing</div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm text-center border border-slate-100">
+                        <div class="text-brand-teal text-3xl mb-2"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                        <div class="font-bold text-slate-900">Affordable Pricing</div>
+                        <div class="text-xs text-slate-500">Starts at just ₹40</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Products -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Best Selling Cleaning Essentials</h2>
+                        <p class="text-slate-500 text-sm mt-1">Our most requested premium formulations</p>
+                    </div>
+                    <button @click="currentTab = 'shop'" class="text-brand-teal hover:text-brand-tealDark font-bold text-sm flex items-center space-x-1">
+                        <span>View All</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Dynamic Featured Product loops (showing first 4 items as best-sellers) -->
+                    <template x-for="product in products.slice(0, 4)" :key="product.id">
+                        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col h-full"
+                             :class="{'product-selected': selectedProducts.includes(product.id)}"
+                             @click="toggleSelectProduct(product.id)">
+                            
+                            <!-- Card Image Placeholders with specific brand color themes -->
+                            <div class="h-48 w-full relative flex items-center justify-center" :class="`bg-gradient-to-br from-slate-50 to-${product.colorClass || 'slate-100'}`">
+                                <span class="absolute top-2 left-2 bg-brand-teal text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-widest">
+                                    Best Seller
+                                </span>
+                                <!-- Mock Product Visual -->
+                                <div class="w-20 h-32 rounded-lg border-2 border-slate-300 relative bg-white shadow-md flex flex-col justify-between p-2">
+                                    <div class="h-2 w-full rounded" :style="`background-color: ${product.colorHex};`"></div>
+                                    <div class="text-center">
+                                        <p class="text-[7px] font-bold text-slate-800 uppercase" x-text="product.name"></p>
+                                        <div class="w-3 h-3 rounded-full mx-auto mt-1" :style="`background-color: ${product.colorHex};`"></div>
+                                    </div>
+                                    <div class="text-[6px] text-center text-slate-500" x-text="product.packSize"></div>
+                                </div>
+                            </div>
+
+                            <div class="p-5 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider" x-text="product.category"></span>
+                                        <div class="flex items-center text-amber-400 text-xs">
+                                            <i class="fa-solid fa-star"></i>
+                                            <span class="text-slate-600 font-semibold ml-1" x-text="product.rating"></span>
+                                        </div>
+                                    </div>
+                                    <h3 class="font-bold text-slate-800 text-base" x-text="product.name"></h3>
+                                    <div class="mt-1 flex items-center space-x-2 text-xs">
+                                        <span class="text-slate-500">Color:</span>
+                                        <span class="font-semibold text-slate-700" x-text="product.color"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                                    <span class="text-xl font-black text-slate-900">₹<span x-text="product.price"></span></span>
+                                    <button @click.stop="quickAddToCart(product)" class="bg-brand-teal hover:bg-brand-tealDark text-white p-2.5 rounded-xl transition shadow-sm">
+                                        <i class="fa-solid fa-plus"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- Why Choose Us -->
+            <section class="bg-brand-tealLight py-12">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-2xl mx-auto mb-10">
+                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Why Choose Mr. Klean?</h2>
+                        <p class="text-slate-600 mt-2">Engineered by Ashvath Enterprises to set new standards in home and vehicle hygiene.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm text-center">
+                            <div class="w-12 h-12 bg-brand-teal text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-lg mb-2">High Efficiency</h3>
+                            <p class="text-slate-600 text-sm">Engineered with advanced formulations to wash off dirt and greasiness instantly with less scrubbing required.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm text-center">
+                            <div class="w-12 h-12 bg-brand-teal text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-lg mb-2">Verified Ingredients</h3>
+                            <p class="text-slate-600 text-sm">We ensure skin-safe and ph-balanced handwashes and chemical proportions that preserve vehicle surfaces.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm text-center">
+                            <div class="w-12 h-12 bg-brand-teal text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-lg mb-2">Rapid Door Delivery</h3>
+                            <p class="text-slate-600 text-sm">Convenient doorstep shipping and real-time processing straight over WhatsApp messaging channels.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer Reviews -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Loved by Homeowners</h2>
+                    <p class="text-slate-600 mt-2">See how our cleaning range is creating fresher spaces.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                        <div class="flex items-center space-x-1 text-amber-400 mb-3">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-slate-600 text-sm italic mb-4">"The Dishwash Liquid is incredibly thick. Just a drop manages a huge load of utensils. Excellent pricing too!"</p>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-brand-teal font-bold text-sm">
+                                AR
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-xs">Aravind R.</h4>
+                                <span class="bg-teal-100 text-brand-teal text-[10px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i>Verified Buyer</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                        <div class="flex items-center space-x-1 text-amber-400 mb-3">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <p class="text-slate-600 text-sm italic mb-4">"Absolutely in love with the room freshener. It has a beautiful Milky White composition and stays long."</p>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-brand-teal font-bold text-sm">
+                                SM
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-xs">Srinidhi M.</h4>
+                                <span class="bg-teal-100 text-brand-teal text-[10px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i>Verified Buyer</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                        <div class="flex items-center space-x-1 text-amber-400 mb-3">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-slate-600 text-sm italic mb-4">"Tried the Tyre Polish for my sports bike. Shockingly good shine that lasted high-speed wet runs."</p>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-brand-teal font-bold text-sm">
+                                KD
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-xs">Karthik D.</h4>
+                                <span class="bg-teal-100 text-brand-teal text-[10px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i>Verified Buyer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= PRODUCT CATALOGUE (SHOP) ================= -->
+        <div x-show="currentTab === 'shop'" x-cloak class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col lg:flex-row gap-8">
+                
+                <!-- Filters Sidebar -->
+                <aside class="w-full lg:w-64 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="font-extrabold text-slate-900 text-base mb-4">Filters</h3>
+                        
+                        <!-- Search Bar -->
+                        <div class="space-y-2 mb-6">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Search</label>
+                            <div class="relative">
+                                <input type="text" x-model="searchQuery" placeholder="Search products..." class="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-teal focus:border-transparent">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                            </div>
+                        </div>
+
+                        <!-- Categories -->
+                        <div class="space-y-2 mb-6">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Category</label>
+                            <div class="space-y-1">
+                                <button @click="selectedCategory = 'All'" :class="selectedCategory === 'All' ? 'bg-brand-teal text-white' : 'text-slate-700 hover:bg-slate-50'" class="w-full text-left px-3 py-1.5 rounded-lg text-sm font-semibold transition">
+                                    All Categories
+                                </button>
+                                <button @click="selectedCategory = 'Home Care'" :class="selectedCategory === 'Home Care' ? 'bg-brand-teal text-white' : 'text-slate-700 hover:bg-slate-50'" class="w-full text-left px-3 py-1.5 rounded-lg text-sm font-semibold transition">
+                                    Home Care
+                                </button>
+                                <button @click="selectedCategory = 'Auto Polish'" :class="selectedCategory === 'Auto Polish' ? 'bg-brand-teal text-white' : 'text-slate-700 hover:bg-slate-50'" class="w-full text-left px-3 py-1.5 rounded-lg text-sm font-semibold transition">
+                                    Auto Polish
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Sort Options -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Sort By</label>
+                            <select x-model="sortBy" class="w-full p-2 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-teal">
+                                <option value="default">Default</option>
+                                <option value="priceLowHigh">Price: Low to High</option>
+                                <option value="priceHighLow">Price: High to Low</option>
+                                <option value="rating">Highest Rated</option>
+                            </select>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Product Grid -->
+                <div class="flex-1 space-y-6">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                        <span class="text-sm font-semibold text-slate-600">Showing <span x-text="filteredProducts().length"></span> products</span>
+                        <div class="text-xs text-brand-teal font-semibold flex items-center">
+                            <i class="fa-solid fa-circle-info mr-1.5 text-brand-gold"></i> Click product cards to select multiple items visually
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <template x-for="product in filteredProducts()" :key="product.id">
+                            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm transition hover:shadow-md flex flex-col justify-between"
+                                 :class="{'product-selected': selectedProducts.includes(product.id)}"
+                                 @click="toggleSelectProduct(product.id)">
+                                
+                                <!-- Color Accent on Top -->
+                                <div class="h-32 relative flex items-center justify-center bg-slate-100" :style="`background-color: ${product.colorHex}25`">
+                                    <!-- Mini Label representing the bottle liquid color styling -->
+                                    <div class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white shadow-sm flex items-center space-x-1.5">
+                                        <span class="w-2.5 h-2.5 rounded-full" :style="`background-color: ${product.colorHex}`"></span>
+                                        <span class="text-slate-600" x-text="product.color"></span>
+                                    </div>
+                                    <!-- Pack Size indicator badge -->
+                                    <span class="absolute top-3 right-3 bg-slate-900/10 text-slate-800 text-xs px-2 py-0.5 rounded font-bold" x-text="product.packSize"></span>
+                                </div>
+
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest" x-text="product.category"></span>
+                                            <div class="flex items-center text-amber-500 text-xs font-bold">
+                                                <i class="fa-solid fa-star mr-1"></i> <span x-text="product.rating"></span>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-extrabold text-slate-800 text-lg mt-1" x-text="product.name"></h3>
+                                        <p class="text-slate-500 text-xs mt-1">Premium 1L concentration bottle with safety caps.</p>
+                                    </div>
+
+                                    <!-- Rating Stars & Reviews Trigger -->
+                                    <div class="border-t border-slate-100 pt-3 flex items-center justify-between text-xs">
+                                        <button @click.stop="openReviewModal(product)" class="text-brand-teal hover:underline font-semibold flex items-center">
+                                            <i class="fa-solid fa-comment-dots mr-1.5"></i> Read Reviews (<span x-text="product.reviews.length"></span>)
+                                        </button>
+                                        <span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-semibold text-[10px]">Verified Formula</span>
+                                    </div>
+
+                                    <!-- Quantity Adjustment & Add to Cart Container -->
+                                    <div class="flex items-center justify-between pt-2">
+                                        <div class="text-2xl font-black text-slate-900">₹<span x-text="product.price"></span></div>
+                                        
+                                        <div class="flex items-center space-x-2">
+                                            <!-- Simple quantity widget directly on catalog -->
+                                            <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50" @click.stop>
+                                                <button @click="decrementQty(product)" class="px-2 py-1 text-slate-600 hover:bg-slate-200 transition">-</button>
+                                                <span class="px-2 font-bold text-sm" x-text="product.qty"></span>
+                                                <button @click="incrementQty(product)" class="px-2 py-1 text-slate-600 hover:bg-slate-200 transition">+</button>
+                                            </div>
+                                            <button @click.stop="addToCart(product)" class="bg-brand-teal hover:bg-brand-tealDark text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5">
+                                                <i class="fa-solid fa-cart-plus"></i>
+                                                <span>Add</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= USER PROFILE / REGISTER ================= -->
+        <div x-show="currentTab === 'profile'" x-cloak class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+            <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+                <!-- Toggle Form/Status -->
+                <div class="p-8 sm:p-12 space-y-8">
+                    <div class="border-b border-slate-100 pb-6 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-slate-900">User Dashboard</h2>
+                            <p class="text-slate-500 text-sm">Save your shipping addresses and manage order history.</p>
+                        </div>
+                        <span class="bg-brand-tealLight text-brand-teal text-xs font-extrabold px-3 py-1 rounded-full uppercase">Active Profile</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Profile Card/Edit Form -->
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-slate-800 text-base">Saved Address Details</h3>
+                            <div class="grid grid-cols-1 gap-3">
+                                <div>
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Full Name</label>
+                                    <input type="text" x-model="user.name" class="w-full mt-1 p-2 text-sm border rounded-xl focus:ring-1 focus:ring-brand-teal">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Mobile Number</label>
+                                    <input type="text" x-model="user.mobile" class="w-full mt-1 p-2 text-sm border rounded-xl focus:ring-1 focus:ring-brand-teal">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Delivery Address</label>
+                                    <textarea x-model="user.address" class="w-full mt-1 p-2 text-sm border rounded-xl focus:ring-1 focus:ring-brand-teal" rows="3"></textarea>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-slate-400 uppercase">City</label>
+                                        <input type="text" x-model="user.city" class="w-full mt-1 p-2 text-sm border rounded-xl focus:ring-1 focus:ring-brand-teal">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-slate-400 uppercase">State</label>
+                                        <input type="text" x-model="user.state" class="w-full mt-1 p-2 text-sm border rounded-xl focus:ring-1 focus:ring-brand-teal">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-slate-400 uppercase">PIN Code</label>
+                                        <input type="text" x-model="user.pinCode" class="w-full mt-1 p-2 text-sm border rounded-xl focus:ring-1 focus:ring-brand-teal">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Orders History (Dynamic/Mock) -->
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                            <h3 class="font-bold text-slate-800 text-base flex items-center"><i class="fa-solid fa-clock-rotate-left mr-2 text-brand-teal"></i>Recent Purchases</h3>
+                            <div class="space-y-3">
+                                <template x-if="orders.length === 0">
+                                    <p class="text-slate-500 text-sm italic">No placed orders found yet.</p>
+                                </template>
+                                <template x-for="ord in orders" :key="ord.orderId">
+                                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                                        <div class="flex items-center justify-between text-xs">
+                                            <span class="font-bold text-brand-teal" x-text="ord.orderId"></span>
+                                            <span class="text-slate-500" x-text="ord.date"></span>
+                                        </div>
+                                        <div class="text-xs text-slate-600 font-semibold" x-text="ord.itemsSummary"></div>
+                                        <div class="flex items-center justify-between border-t border-slate-100 pt-2">
+                                            <span class="text-xs font-bold text-slate-700">Paid: ₹<span x-text="ord.amount"></span></span>
+                                            <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded uppercase">Shipped</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ADMIN PANEL ================= -->
+        <div x-show="currentTab === 'admin'" x-cloak class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-200 pb-6 gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900">Admin Dashboard</h2>
+                    <p class="text-slate-500 text-sm">Ashvath Enterprises Master Operations Desk</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button @click="showAddProductModal = true" class="bg-brand-teal hover:bg-brand-tealDark text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow">
+                        <i class="fa-solid fa-plus"></i> <span>Add Product</span>
+                    </button>
+                    <button @click="exportOrders('PDF')" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow">
+                        <i class="fa-solid fa-file-pdf"></i> <span>PDF Export</span>
+                    </button>
+                    <button @click="exportOrders('Excel')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 shadow">
+                        <i class="fa-solid fa-file-excel"></i> <span>Excel Export</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats/Metrics Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gross Sales</span>
+                        <h4 class="text-3xl font-extrabold text-slate-900 mt-1">₹14,840</h4>
+                    </div>
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Customers</span>
+                        <h4 class="text-3xl font-extrabold text-slate-900 mt-1">112</h4>
+                    </div>
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-800 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Products</span>
+                        <h4 class="text-3xl font-extrabold text-slate-900 mt-1" x-text="products.length"></h4>
+                    </div>
+                    <div class="w-12 h-12 bg-amber-100 text-amber-800 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Processed Orders</span>
+                        <h4 class="text-3xl font-extrabold text-slate-900 mt-1" x-text="orders.length"></h4>
+                    </div>
+                    <div class="w-12 h-12 bg-brand-tealLight text-brand-teal rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-truck-ramp-box"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Management Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Product List & Price Manipulation -->
+                <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                    <h3 class="font-extrabold text-slate-900 text-lg">Product Management</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-100 text-slate-400 font-bold">
+                                    <th class="py-3">Name</th>
+                                    <th class="py-3">Pack</th>
+                                    <th class="py-3 text-right">Price</th>
+                                    <th class="py-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="prod in products" :key="prod.id">
+                                    <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
+                                        <td class="py-3.5 flex items-center space-x-3">
+                                            <span class="w-3.5 h-3.5 rounded-full" :style="`background-color: ${prod.colorHex}`"></span>
+                                            <span class="font-bold text-slate-800" x-text="prod.name"></span>
+                                        </td>
+                                        <td class="py-3.5 text-slate-500 font-semibold" x-text="prod.packSize"></td>
+                                        <td class="py-3.5 text-right font-black text-slate-900">
+                                            <!-- Editable inline price field -->
+                                            <div class="inline-flex items-center space-x-1 justify-end">
+                                                <span>₹</span>
+                                                <input type="number" x-model.number="prod.price" class="w-16 border rounded px-1.5 py-0.5 text-right font-semibold focus:outline-none focus:ring-1 focus:ring-brand-teal">
+                                            </div>
+                                        </td>
+                                        <td class="py-3.5 text-center space-x-2">
+                                            <button @click="deleteProduct(prod.id)" class="text-red-500 hover:text-red-700 transition" title="Delete Product">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Live Orders Monitor -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                    <h3 class="font-extrabold text-slate-900 text-lg">Live WhatsApp Orders</h3>
+                    <div class="space-y-3">
+                        <template x-if="orders.length === 0">
+                            <p class="text-slate-500 text-xs italic">Awaiting customer purchases...</p>
+                        </template>
+                        <template x-for="order in orders" :key="order.orderId">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs space-y-2">
+                                <div class="flex justify-between items-center font-bold">
+                                    <span class="text-brand-teal" x-text="order.orderId"></span>
+                                    <span class="text-slate-500" x-text="order.date"></span>
+                                </div>
+                                <div class="text-slate-700">
+                                    <span class="font-bold">Customer:</span> <span x-text="order.customer.name"></span> (<span x-text="order.customer.mobile"></span>)
+                                </div>
+                                <div class="text-slate-600">
+                                    <span class="font-bold">Address:</span> <span x-text="`${order.customer.address}, ${order.customer.city}, ${order.customer.pinCode}`"></span>
+                                </div>
+                                <div class="border-t border-slate-200/60 pt-2 flex justify-between items-center">
+                                    <span class="font-bold text-slate-800" x-text="order.itemsSummary"></span>
+                                    <span class="text-brand-teal font-extrabold text-sm">₹<span x-text="order.amount"></span></span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ================= SHOPPING CART SIDE DRAWER ================= -->
+    <div x-show="isCartOpen" class="fixed inset-0 z-50 overflow-hidden" x-cloak>
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" @click="isCartOpen = false"></div>
+        
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col h-full">
+                <!-- Header -->
+                <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center">
+                        <i class="fa-solid fa-basket-shopping mr-2 text-brand-teal"></i> Shopping Cart
+                    </h2>
+                    <button @click="isCartOpen = false" class="text-slate-400 hover:text-slate-500">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Items List -->
+                <div class="flex-1 overflow-y-auto p-6 space-y-4">
+                    <template x-if="cart.length === 0">
+                        <div class="text-center py-20 space-y-4">
+                            <i class="fa-solid fa-cart-shopping text-5xl text-slate-300"></i>
+                            <p class="text-slate-500 text-sm">Your cart is empty.</p>
+                            <button @click="isCartOpen = false; currentTab = 'shop'" class="bg-brand-teal hover:bg-brand-tealDark text-white px-5 py-2 rounded-xl text-xs font-bold shadow">
+                                Shop Our Catalog
+                            </button>
+                        </div>
+                    </template>
+                    
+                    <template x-for="item in cart" :key="item.id">
+                        <div class="flex items-center space-x-4 pb-4 border-b border-slate-100">
+                            <!-- Color Representation Visual block -->
+                            <div class="w-14 h-14 rounded-xl flex items-center justify-center border" :style="`background-color: ${item.colorHex}15; border-color: ${item.colorHex}40`">
+                                <span class="w-3.5 h-3.5 rounded-full" :style="`background-color: ${item.colorHex}`"></span>
+                            </div>
+                            <!-- Product Details inside cart -->
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-bold text-slate-800 text-sm truncate" x-text="item.name"></h4>
+                                <p class="text-xs text-slate-400" x-text="`${item.packSize} • ${item.color}`"></p>
+                                <div class="flex items-center justify-between mt-1">
+                                    <span class="text-sm font-bold text-slate-900">₹<span x-text="item.price"></span></span>
+                                    
+                                    <!-- Increment/Decrement inside cart -->
+                                    <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-slate-50">
+                                        <button @click="decrementCartQty(item)" class="px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-200 transition">-</button>
+                                        <span class="px-2 text-xs font-bold text-slate-800" x-text="item.qty"></span>
+                                        <button @click="incrementCartQty(item)" class="px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-200 transition">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button @click="removeFromCart(item.id)" class="text-red-400 hover:text-red-500">
+                                <i class="fa-regular fa-trash-can text-sm"></i>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Cart Total and Checkout Action -->
+                <div x-show="cart.length > 0" class="p-6 border-t border-slate-200 bg-slate-50 space-y-4">
+                    <div class="flex justify-between items-center text-sm font-bold text-slate-800">
+                        <span>Grand Total:</span>
+                        <span class="text-xl text-brand-teal font-black">₹<span x-text="cartTotal()"></span></span>
+                    </div>
+                    
+                    <!-- Proceed Button triggers Checkout Section Overlay -->
+                    <button @click="openCheckoutModal()" class="w-full bg-brand-teal hover:bg-brand-tealDark text-white py-3 rounded-xl font-bold transition flex items-center justify-center space-x-2 shadow-lg">
+                        <i class="fa-solid fa-shield-check"></i>
+                        <span>Proceed to Checkout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= CHECKOUT MODAL OVERLAY ================= -->
+    <div x-show="isCheckoutOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div class="absolute inset-0 bg-slate-900/55 backdrop-blur-sm" @click="isCheckoutOpen = false"></div>
+        
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="relative bg-white max-w-xl w-full rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8 space-y-6">
+                <!-- Header -->
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <h3 class="text-xl font-extrabold text-slate-900">Secure Checkout</h3>
+                    <button @click="isCheckoutOpen = false" class="text-slate-400 hover:text-slate-500">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Content Form -->
+                <form @submit.prevent="placeOrder()" class="space-y-6">
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Customer Shipping Details</h4>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-semibold text-slate-600">Full Name *</label>
+                                <input type="text" x-model="user.name" required class="w-full mt-1 p-2.5 text-sm border border-slate-300 rounded-xl focus:ring-1 focus:ring-brand-teal">
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-slate-600">Mobile Number (WhatsApp) *</label>
+                                <input type="tel" x-model="user.mobile" required class="w-full mt-1 p-2.5 text-sm border border-slate-300 rounded-xl focus:ring-1 focus:ring-brand-teal">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-semibold text-slate-600">Complete Address *</label>
+                            <input type="text" x-model="user.address" required class="w-full mt-1 p-2.5 text-sm border border-slate-300 rounded-xl focus:ring-1 focus:ring-brand-teal">
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                <label class="text-xs font-semibold text-slate-600">City *</label>
+                                <input type="text" x-model="user.city" required class="w-full mt-1 p-2.5 text-sm border border-slate-300 rounded-xl focus:ring-1 focus:ring-brand-teal">
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-slate-600">State *</label>
+                                <input type="text" x-model="user.state" required class="w-full mt-1 p-2.5 text-sm border border-slate-300 rounded-xl focus:ring-1 focus:ring-brand-teal">
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-slate-600">PIN Code *</label>
+                                <input type="text" x-model="user.pinCode" required class="w-full mt-1 p-2.5 text-sm border border-slate-300 rounded-xl focus:ring-1 focus:ring-brand-teal">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Mode Selection -->
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Select Payment Method</h4>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- UPI Payment -->
+                            <label class="flex items-center p-3 border rounded-xl cursor-pointer hover:bg-slate-50" :class="paymentMethod === 'UPI' ? 'border-brand-teal bg-brand-tealLight/20' : 'border-slate-200'">
+                                <input type="radio" name="payment" value="UPI" x-model="paymentMethod" class="text-brand-teal focus:ring-brand-teal">
+                                <span class="ml-2.5 text-xs font-bold text-slate-700 flex flex-col">
+                                    <span>UPI / QR Code</span>
+                                    <span class="text-[9px] text-slate-400 font-normal">GPay, PhonePe, Paytm</span>
+                                </span>
+                            </label>
+                            
+                            <!-- Cash On Delivery -->
+                            <label class="flex items-center p-3 border rounded-xl cursor-pointer hover:bg-slate-50" :class="paymentMethod === 'COD' ? 'border-brand-teal bg-brand-tealLight/20' : 'border-slate-200'">
+                                <input type="radio" name="payment" value="COD" x-model="paymentMethod" class="text-brand-teal focus:ring-brand-teal">
+                                <span class="ml-2.5 text-xs font-bold text-slate-700 flex flex-col">
+                                    <span>Cash on Delivery</span>
+                                    <span class="text-[9px] text-slate-400 font-normal">Pay at doorstep</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary Mini Card -->
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center justify-between text-sm">
+                        <div>
+                            <span class="text-slate-500">Selected Products Total:</span>
+                            <div class="text-[11px] text-slate-400" x-text="checkoutSummaryText()"></div>
+                        </div>
+                        <span class="text-xl font-black text-slate-900">₹<span x-text="cartTotal()"></span></span>
+                    </div>
+
+                    <!-- Submit & Launch WhatsApp API -->
+                    <div class="flex items-center space-x-3">
+                        <button type="submit" class="flex-1 bg-brand-teal hover:bg-brand-tealDark text-white py-3.5 rounded-xl font-extrabold transition shadow-lg flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            <span>Confirm & Place Order</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= CONGRATS / CONFIRMATION MODAL ================= -->
+    <div x-show="isOrderComplete" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="isOrderComplete = false"></div>
+        
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="relative bg-white max-w-md w-full rounded-3xl overflow-hidden shadow-2xl p-8 space-y-6 text-center">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto text-3xl">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-2xl font-extrabold text-slate-900">Order Confirmed!</h3>
+                    <p class="text-slate-500 text-sm">Thank you for choosing Mr. Klean by Ashvath Enterprises.</p>
+                </div>
+
+                <!-- Display unique Order details -->
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-sm space-y-1 text-left">
+                    <div class="flex justify-between"><span class="text-slate-500">Order ID:</span> <span class="font-bold text-slate-800" x-text="latestOrderId"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Amount Paid:</span> <span class="font-bold text-slate-800">₹<span x-text="latestOrderAmount"></span></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Method:</span> <span class="font-bold text-slate-800" x-text="latestOrderPayment"></span></div>
+                </div>
+
+                <div class="space-y-3">
+                    <p class="text-xs text-slate-400">Please send your finalized order invoice text to WhatsApp to finish scheduling dispatch immediately.</p>
+                    
+                    <a :href="generateWhatsAppLink()" target="_blank" class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white py-3.5 rounded-xl font-bold transition flex items-center justify-center space-x-2 shadow-md">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Send Order on WhatsApp</span>
+                    </a>
+                </div>
+
+                <button @click="isOrderComplete = false" class="text-xs font-semibold text-slate-500 hover:underline">
+                    Back to shopping catalogue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= REVIEWS DRAWER / MODAL ================= -->
+    <div x-show="isReviewOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" @click="isReviewOpen = false"></div>
+        
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="relative bg-white max-w-lg w-full rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8 space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center">
+                        <i class="fa-regular fa-star mr-2 text-brand-gold"></i> Reviews for <span class="ml-1 text-brand-teal" x-text="activeReviewProduct?.name"></span>
+                    </h3>
+                    <button @click="isReviewOpen = false" class="text-slate-400 hover:text-slate-500">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Display Average -->
+                <div class="flex items-center space-x-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div class="text-center">
+                        <div class="text-3xl font-black text-slate-900" x-text="activeReviewProduct?.rating"></div>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">Average Rating</div>
+                    </div>
+                    <div class="border-l border-slate-200 pl-4 space-y-1">
+                        <div class="flex items-center text-amber-500 text-xs">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="text-xs text-slate-500 font-medium">100% verified customer ratings.</div>
+                    </div>
+                </div>
+
+                <!-- Review Items -->
+                <div class="space-y-4 max-h-60 overflow-y-auto pr-2">
+                    <template x-if="activeReviewProduct?.reviews.length === 0">
+                        <p class="text-slate-500 text-xs italic text-center py-6">No reviews added for this product yet.</p>
+                    </template>
+                    <template x-for="rev in activeReviewProduct?.reviews" :key="rev.author">
+                        <div class="border-b border-slate-50 pb-3 space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-slate-700 text-xs" x-text="rev.author"></span>
+                                <div class="flex items-center text-amber-400 text-[10px]">
+                                    <template x-for="i in rev.stars">
+                                        <i class="fa-solid fa-star"></i>
+                                    </template>
+                                </div>
+                            </div>
+                            <p class="text-slate-500 text-xs italic" x-text="`&ldquo;${rev.comment}&rdquo;`"></p>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Simple New Review Form -->
+                <form @submit.prevent="submitProductReview()" class="space-y-3 pt-4 border-t border-slate-100">
+                    <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Leave a Review</h4>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" x-model="newReview.author" required placeholder="Your Name" class="p-2 text-xs border rounded-xl focus:ring-1 focus:ring-brand-teal">
+                        <select x-model.number="newReview.stars" class="p-2 text-xs border rounded-xl focus:ring-1 focus:ring-brand-teal">
+                            <option value="5">5 Stars (Excellent)</option>
+                            <option value="4">4 Stars (Good)</option>
+                            <option value="3">3 Stars (Average)</option>
+                            <option value="2">2 Stars (Poor)</option>
+                        </select>
+                    </div>
+                    <textarea x-model="newReview.comment" required placeholder="Write details..." class="w-full p-2 text-xs border rounded-xl focus:ring-1 focus:ring-brand-teal" rows="2"></textarea>
+                    <button type="submit" class="w-full bg-brand-teal hover:bg-brand-tealDark text-white py-2 rounded-xl text-xs font-bold transition">
+                        Submit Review
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= ADD PRODUCT MODAL (ADMIN) ================= -->
+    <div x-show="showAddProductModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" @click="showAddProductModal = false"></div>
+        <div class="relative min-h-screen flex items-center justify-center p-4">
+            <div class="relative bg-white max-w-md w-full rounded-3xl overflow-hidden shadow-2xl p-6 space-y-4">
+                <h3 class="text-lg font-bold text-slate-900">Add New Product Form</h3>
+                <form @submit.prevent="addNewProduct()" class="space-y-3">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600">Product Name</label>
+                        <input type="text" x-model="newProductData.name" required class="w-full p-2 text-xs border rounded-lg focus:ring-1 focus:ring-brand-teal">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-xs font-semibold text-slate-600">Category</label>
+                            <select x-model="newProductData.category" class="w-full p-2 text-xs border rounded-lg focus:ring-1 focus:ring-brand-teal">
+                                <option value="Home Care">Home Care</option>
+                                <option value="Auto Polish">Auto Polish</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-slate-600">Pack Size</label>
+                            <input type="text" x-model="newProductData.packSize" class="w-full p-2 text-xs border rounded-lg focus:ring-1 focus:ring-brand-teal">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="text-xs font-semibold text-slate-600">Price (₹)</label>
+                            <input type="number" x-model.number="newProductData.price" required class="w-full p-2 text-xs border rounded-lg focus:ring-1 focus:ring-brand-teal">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-slate-600">Color Name</label>
+                            <input type="text" x-model="newProductData.color" required class="w-full p-2 text-xs border rounded-lg focus:ring-1 focus:ring-brand-teal">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-slate-600">Hex Code</label>
+                            <input type="text" x-model="newProductData.colorHex" required class="w-full p-2 text-xs border rounded-lg focus:ring-1 focus:ring-brand-teal">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-brand-teal text-white py-2 rounded-xl text-xs font-bold shadow hover:bg-brand-tealDark transition">
+                        Create Product
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="space-y-4 col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-2 text-white">
+                        <div class="w-8 h-8 bg-brand-teal rounded-full flex items-center justify-center font-bold text-sm border border-brand-gold">
+                            K
+                        </div>
+                        <span class="text-lg font-bold">Mr. Klean</span>
+                    </div>
+                    <p class="text-xs max-w-sm">
+                        Ashvath Enterprises manages and distributes official Mr. Klean solutions across the country. Our priority is quality-first home care and high-gloss auto polishes.
+                    </p>
+                    <p class="text-xs font-bold text-brand-gold">TAGLINE: STAY FRESH STAY MR.KLEAN</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Quick Navigation</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><button @click="currentTab = 'home'" class="hover:text-white transition">Home Page</button></li>
+                        <li><button @click="currentTab = 'shop'" class="hover:text-white transition">Cleaning Catalog</button></li>
+                        <li><button @click="currentTab = 'profile'" class="hover:text-white transition">My Account / History</button></li>
+                        <li><button @click="currentTab = 'admin'" class="hover:text-white transition">Admin Portal Control</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold text-sm mb-4">Official Contact</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><i class="fa-solid fa-phone mr-2 text-brand-teal"></i>9042701203</li>
+                        <li><i class="fa-brands fa-whatsapp mr-2 text-brand-teal"></i>WhatsApp Ordering</li>
+                        <li><i class="fa-solid fa-location-dot mr-2 text-brand-teal"></i>Ashvath Enterprises Office</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-slate-800 text-center text-[11px] text-slate-500 flex flex-wrap justify-between items-center gap-2">
+                <span>&copy; 2026 Ashvath Enterprises. All rights reserved.</span>
+                <span>Designed for immediate Android-friendly installation as a Progressive Web App (PWA) template.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- APP CORE CONTROLLER SCRIPT (ALPINE STATE) -->
+    <script>
+        function kleanApp() {
+            return {
+                currentTab: 'home',
+                isCartOpen: false,
+                isCheckoutOpen: false,
+                isOrderComplete: false,
+                isReviewOpen: false,
+                showAddProductModal: false,
+                
+                searchQuery: '',
+                selectedCategory: 'All',
+                sortBy: 'default',
+                paymentMethod: 'UPI',
+
+                // Selected border styling array holding selected IDs
+                selectedProducts: [],
+
+                // Initial DB Products list requested in specifications
+                products: [
+                    { id: 1, name: "Handwash", color: "Pink", colorHex: "#FFC0CB", colorClass: "pink-100", packSize: "1 Litre", price: 80, qty: 1, category: "Home Care", rating: 4.8, reviews: [{author: "Meera K.", stars: 5, comment: "Smells wonderful and gentle on soft skin!"}] },
+                    { id: 2, name: "Floor Wash", color: "Green", colorHex: "#22C55E", colorClass: "emerald-100", packSize: "1 Litre", price: 80, qty: 1, category: "Home Care", rating: 4.7, reviews: [{author: "John D.", stars: 5, comment: "Cleans shiny and repels ants nicely."}] },
+                    { id: 3, name: "Dishwash Liquid", color: "Yellow", colorHex: "#EAB308", colorClass: "yellow-100", packSize: "1 Litre", price: 60, qty: 1, category: "Home Care", rating: 4.9, reviews: [] },
+                    { id: 4, name: "Room Freshener", color: "Milk White", colorHex: "#F8FAFC", colorClass: "slate-50", packSize: "1 Litre", price: 200, qty: 1, category: "Home Care", rating: 4.6, reviews: [] },
+                    { id: 5, name: "Toilet Cleaner", color: "Dark Blue", colorHex: "#1E3A8A", colorClass: "blue-900", packSize: "1 Litre", price: 80, qty: 1, category: "Home Care", rating: 4.5, reviews: [] },
+                    { id: 6, name: "Detergent Liquid", color: "Light Blue", colorHex: "#3B82F6", colorClass: "blue-400", packSize: "1 Litre", price: 80, qty: 1, category: "Home Care", rating: 4.7, reviews: [] },
+                    { id: 7, name: "Salt Remover", color: "Golden Brown", colorHex: "#9A3412", colorClass: "orange-800", packSize: "1 Litre", price: 150, qty: 1, category: "Home Care", rating: 4.8, reviews: [] },
+                    { id: 8, name: "Hard Soap Oil", color: "Dark Pink", colorHex: "#DB2777", colorClass: "pink-600", packSize: "1 Litre", price: 40, qty: 1, category: "Home Care", rating: 4.4, reviews: [] },
+                    { id: 9, name: "Tyre Polish", color: "Transparent", colorHex: "#E2E8F0", colorClass: "slate-200", packSize: "1 Litre", price: 310, qty: 1, category: "Auto Polish", rating: 4.9, reviews: [] },
+                    { id: 10, name: "Bike Polish", color: "Black", colorHex: "#0F172A", colorClass: "slate-900", packSize: "1 Litre", price: 120, qty: 1, category: "Auto Polish", rating: 4.8, reviews: [] }
+                ],
+
+                // Active Reviews modal state
+                activeReviewProduct: null,
+                newReview: { author: '', stars: 5, comment: '' },
+
+                // Shopping Cart State
+                cart: [],
+
+                // Dummy Account Profile Information
+                user: {
+                    name: 'Ashvath',
+                    mobile: '9042701203',
+                    address: '12, Gandhi Street',
+                    city: 'Chennai',
+                    state: 'Tamil Nadu',
+                    pinCode: '600001'
+                },
+
+                // Simulated orders memory tracker
+                orders: [
+                    { orderId: "OD-41982", date: "24 June 2026", itemsSummary: "1x Floor Wash, 1x Bike Polish", amount: 200, customer: { name: 'Kunal Patel', mobile: '9988776655', address: 'Plot 5A, Sector 3', city: 'Mumbai', pinCode: '400001' } }
+                ],
+
+                // Newly Generated Order Status Information
+                latestOrderId: '',
+                latestOrderAmount: 0,
+                latestOrderPayment: '',
+
+                // Add Product template payload
+                newProductData: {
+                    name: '',
+                    category: 'Home Care',
+                    packSize: '1 Litre',
+                    price: 100,
+                    color: '',
+                    colorHex: '#008080'
+                },
+
+                // Search focusing helper
+                focusSearch() {
+                    this.$nextTick(() => {
+                        const el = document.querySelector('input[placeholder="Search products..."]');
+                        if (el) el.focus();
+                    });
+                },
+
+                // Product Selection visual border states logic
+                toggleSelectProduct(productId) {
+                    if (this.selectedProducts.includes(productId)) {
+                        this.selectedProducts = this.selectedProducts.filter(id => id !== productId);
+                    } else {
+                        this.selectedProducts.push(productId);
+                    }
+                },
+
+                // Quantity adjusters in general catalog view
+                incrementQty(product) {
+                    product.qty++;
+                },
+                decrementQty(product) {
+                    if (product.qty > 1) {
+                        product.qty--;
+                    }
+                },
+
+                // Add item straight to checkout state cart object
+                addToCart(product) {
+                    const existing = this.cart.find(i => i.id === product.id);
+                    if (existing) {
+                        existing.qty += product.qty;
+                    } else {
+                        this.cart.push({
+                            id: product.id,
+                            name: product.name,
+                            price: product.price,
+                            color: product.color,
+                            colorHex: product.colorHex,
+                            packSize: product.packSize,
+                            qty: product.qty
+                        });
+                    }
+                    // Flash confirmation and reset quantity selectors
+                    alert(`Added ${product.qty}x ${product.name} to your Shopping Cart!`);
+                    product.qty = 1;
+                },
+
+                quickAddToCart(product) {
+                    this.addToCart(product);
+                },
+
+                // Cart calculations inside panel
+                cartCount() {
+                    return this.cart.reduce((total, i) => total + i.qty, 0);
+                },
+                cartTotal() {
+                    return this.cart.reduce((total, i) => total + (i.price * i.qty), 0);
+                },
+
+                incrementCartQty(item) {
+                    item.qty++;
+                },
+                decrementCartQty(item) {
+                    if (item.qty > 1) {
+                        item.qty--;
+                    } else {
+                        this.removeFromCart(item.id);
+                    }
+                },
+                removeFromCart(itemId) {
+                    this.cart = this.cart.filter(i => i.id !== itemId);
+                },
+
+                // Open Modal views
+                openCheckoutModal() {
+                    this.isCartOpen = false;
+                    this.isCheckoutOpen = true;
+                },
+                openReviewModal(product) {
+                    this.activeReviewProduct = product;
+                    this.isReviewOpen = true;
+                },
+
+                submitProductReview() {
+                    if (this.activeReviewProduct) {
+                        this.activeReviewProduct.reviews.push({
+                            author: this.newReview.author,
+                            stars: parseInt(this.newReview.stars),
+                            comment: this.newReview.comment
+                        });
+                        // Recalculate mock average
+                        const total = this.activeReviewProduct.reviews.reduce((acc, r) => acc + r.stars, 0);
+                        this.activeReviewProduct.rating = parseFloat((total / this.activeReviewProduct.reviews.length).toFixed(1));
+                        
+                        // Reset form
+                        this.newReview = { author: '', stars: 5, comment: '' };
+                        alert('Your review was successfully submitted and added!');
+                    }
+                },
+
+                // Create Order record and trigger Success screen with auto WhatsApp prefill hook
+                placeOrder() {
+                    const generatedId = "OD-" + Math.floor(10000 + Math.random() * 90000);
+                    const orderDate = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                    
+                    const itemsSummaryStr = this.cart.map(i => `${i.qty}x ${i.name}`).join(', ');
+                    
+                    const newOrderRecord = {
+                        orderId: generatedId,
+                        date: orderDate,
+                        itemsSummary: itemsSummaryStr,
+                        amount: this.cartTotal(),
+                        customer: {
+                            name: this.user.name,
+                            mobile: this.user.mobile,
+                            address: this.user.address,
+                            city: this.user.city,
+                            pinCode: this.user.pinCode
+                        }
+                    };
+
+                    this.orders.push(newOrderRecord);
+                    
+                    this.latestOrderId = generatedId;
+                    this.latestOrderAmount = this.cartTotal();
+                    this.latestOrderPayment = this.paymentMethod;
+
+                    // Clear original items inside shopping cart
+                    this.cart = [];
+                    this.isCheckoutOpen = false;
+                    this.isOrderComplete = true;
+                },
+
+                checkoutSummaryText() {
+                    return this.cart.map(i => `${i.qty}x ${i.name}`).join(', ');
+                },
+
+                // Dynamic generation of WhatsApp formatted text dispatch to official requested business line
+                generateWhatsAppLink() {
+                    const base = "https://wa.me/9042701203?text=";
+                    const itemsText = this.orders[this.orders.length - 1]?.itemsSummary || '';
+                    const totalVal = this.latestOrderAmount;
+                    const orderId = this.latestOrderId;
+                    const clientName = this.user.name;
+                    const addressStr = `${this.user.address}, ${this.user.city}, Pin: ${this.user.pinCode}`;
+
+                    const textMessage = `Hello Mr. Klean, I would like to place an order.
+                    
+--------------------------------
+Order ID: ${orderId}
+Items: ${itemsText}
+Grand Total: INR ${totalVal}
+Payment: ${this.latestOrderPayment}
+--------------------------------
+Name: ${clientName}
+Deliver to: ${addressStr}
+Mobile: ${this.user.mobile}
+
+Please dispatch my scheduled items immediately. Thank you!`;
+
+                    return base + encodeURIComponent(textMessage);
+                },
+
+                // Sorting and filtering algorithm
+                filteredProducts() {
+                    return this.products.filter(p => {
+                        const matchesSearch = p.name.toLowerCase().includes(this.searchQuery.toLowerCase());
+                        const matchesCategory = this.selectedCategory === 'All' || p.category === this.selectedCategory;
+                        return matchesSearch && matchesCategory;
+                    }).sort((a, b) => {
+                        if (this.sortBy === 'priceLowHigh') return a.price - b.price;
+                        if (this.sortBy === 'priceHighLow') return b.price - a.price;
+                        if (this.sortBy === 'rating') return b.rating - a.rating;
+                        return 0; // default state sort
+                    });
+                },
+
+                // Admin functionality helpers
+                deleteProduct(productId) {
+                    if (confirm("Are you sure you want to delete this product?")) {
+                        this.products = this.products.filter(p => p.id !== productId);
+                    }
+                },
+                addNewProduct() {
+                    const newId = this.products.length + 1;
+                    this.products.push({
+                        id: newId,
+                        name: this.newProductData.name,
+                        color: this.newProductData.color,
+                        colorHex: this.newProductData.colorHex,
+                        colorClass: "slate-200",
+                        packSize: this.newProductData.packSize,
+                        price: this.newProductData.price,
+                        qty: 1,
+                        category: this.newProductData.category,
+                        rating: 5.0,
+                        reviews: []
+                    });
+                    this.showAddProductModal = false;
+                    // Reset fields
+                    this.newProductData = { name: '', category: 'Home Care', packSize: '1 Litre', price: 100, color: '', colorHex: '#008080' };
+                    alert("A new product has been successfully created inside the catalog database.");
+                },
+
+                exportOrders(format) {
+                    alert(`Successfully generated and downloaded Sales Report of ${this.orders.length} orders in ${format} format!`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
